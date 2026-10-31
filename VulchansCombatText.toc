@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: Vulchan's Combat Text
+## Notes: Polished side-positioned floating damage numbers with spell icons.
+## Author: OpenAI
+## Version: 0.3.4
+## SavedVariables: VCTDB
+
+VulchansCombatText.lua
