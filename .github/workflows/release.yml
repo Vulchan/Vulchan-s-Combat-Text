@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify VulchansCombatText.toc version matches tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          TOC_VERSION=$(grep -m1 '^## Version:' VulchansCombatText.toc | awk '{print $3}' | tr -d '\r')
+          if [ "$TAG_VERSION" != "$TOC_VERSION" ]; then
+            echo "Error: Tag version ($TAG_VERSION) does not match VulchansCombatText.toc version ($TOC_VERSION)"
+            exit 1
+          fi
+          echo "Version match verified: $TAG_VERSION"
+
+      - name: Build VulchansCombatText.zip
+        run: git archive --format=zip --prefix=VulchansCombatText/ -o VulchansCombatText.zip "$GITHUB_REF_NAME"
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" VulchansCombatText.zip --title "Vulchan's Combat Text $GITHUB_REF_NAME" --generate-notes
