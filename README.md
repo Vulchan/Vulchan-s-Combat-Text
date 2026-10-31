@@ -1,49 +1,79 @@
-# Vulchan's Combat Text
+VULCHAN'S COMBAT TEXT 0.4.14
 
-An addon for **Azeroth Survivors** that condenses the floating combat text into a much more manageable form. No longer are we blind to the game.
-
-## Installation
-
+INSTALL
 1. Close Azeroth Survivors.
-2. Replace the existing `VulchansCombatText` folder in `AddOns` with this folder.
+2. Replace the existing VulchansCombatText folder in AddOns with this folder.
 3. Launch the game and start a run.
 
-## Testing
+MOVE THE COMBAT TEXT
+Hold CTRL to reveal an outlined drag area fitted to the current layout. In vertical mode it is tall and narrow; in horizontal mode it is wide and shallow. Then
+left-click and drag anywhere inside the outlined area. The combat text follows
+as you move it. Release the mouse button to save the position. The drag area
+only accepts mouse input while CTRL is held, so normal gameplay clicks are
+unaffected.
 
-Type `/vct test`. The test tries to show icons for **Shadow Bolt**, **Corruption** and **Melee**.
+LAYOUT
+/vct vertical     Stack numbers vertically (default).
+/vct horizontal   Arrange numbers horizontally with enough spacing to keep hits readable.
 
-- Real outgoing spell hits use the spell name parsed from the combat message and look up that spell in your spellbook.
-- Melee uses the equipped main-hand weapon.
+SCALING
+/vct scale 50     Set overall size to 50%.
+/vct scale 75     Set overall size to 75%.
+/vct scale 100    Restore normal size (default).
+/vct scale 125    Set overall size to 125%.
+/vct scale 150    Set overall size to 150%.
+/vct scale 200    Set overall size to 200%.
+Scaling applies to damage numbers, spell icons, spacing, and animation distance.
+The setting is saved between sessions. Valid values are 50-200.
 
-## Commands
+OTHER COMMANDS
+/vct on
+/vct off
+/vct test
+/vct icons on
+/vct icons off
+/vct iconsize 22
+/vct scale 100
+/vct reset
 
-| Command              | Description                     |
-| -------------------- | ------------------------------- |
-| `/vct on`            | Enable the addon                |
-| `/vct off`           | Disable the addon               |
-| `/vct test`          | Show test combat text           |
-| `/vct icons on`      | Show spell icons                |
-| `/vct icons off`     | Hide spell icons                |
-| `/vct iconsize 22`   | Set the icon size (in pixels)   |
-| `/vct reset`         | Reset all settings              |
+NOTES
+- This is standalone and does not load or alter Survivor UI.
+- Position and layout are saved in VCTDB between sessions.
+- Spell icons are resolved from the player's spellbook. If a spell is not in the
+  spellbook or the message format does not identify its source, the number remains
+  visible without an icon.
+- Incoming damage has no source spell name in the classic COMBAT_TEXT_UPDATE event,
+  so it intentionally has no source icon in this version.
 
-## Damage Display
+0.4.0 CHANGES
+- Hold CTRL and left-click-drag to reposition the combat text. Position persists.
+- Added /vct horizontal and /vct vertical layout commands. Layout persists.
 
-- Exact values below 1,000.
-- Whole-thousand shorthand from `1k` through `999k`.
-- Spell icons sit 1 pixel to the left of the rendered number and follow it as its digit count changes.
+0.4.1 CHANGES
+- Added overall scaling from 50% to 200% with /vct scale <percent>.
+- Scales damage numbers, icons, spacing, and animation distance together.
+- Scale is saved in VCTDB and restored automatically.
 
-## Notes
 
-- Standalone: does not load or alter the Survivor UI.
-- Spell icons are resolved from the player's spellbook. If a spell is not in the spellbook, or the message format does not identify its source, the number stays visible without an icon.
-- Incoming damage has no source spell name in the classic `COMBAT_TEXT_UPDATE` event, so it intentionally has no source icon in this version.
+0.4.2 CHANGES
+- Added a visible, large positioning area while CTRL is held.
+- Players can grab anywhere inside the outlined area, not just on a number.
+- Combat text now follows the drag surface live while repositioning.
 
-## Changelog
+0.4.5 CHANGES
+- Reworked drag positioning to use the center of the drag surface as the saved anchor.
+- The positioning outline is now centered on the combat text anchor, removing the confusing right-edge offset.
+- Center-based coordinates allow placement across the full screen, including the left side.
 
-### 0.3.4
-- **Change:** Spell icons now track the rendered number width dynamically instead of anchoring to the fixed-width text frame.
 
-### 0.3.3
-- **Fix:** Replaced `string.match` calls with Lua 5.0-compatible `string.find` captures.
-- **Change:** Reduced icon-to-number gap from 5 pixels to 1 pixel.
+0.4.10 CHANGES
+- Rebuilt the drag surface to fit the combat-text footprint.
+- Vertical layout uses a tall, narrow positioning box around the stacked numbers.
+- Horizontal layout uses a wide, shallow positioning box around the row of numbers.
+- The combat-text anchor is derived from the box's bottom-left during movement,
+  keeping the numbers inside the box and preventing release-time snapping.
+
+0.4.14 CHANGES
+- Tightened the vertical positioning box into a tall, narrow column around the damage text and icons.
+- Narrowed the vertical text field so the numbers fit within that column.
+- Horizontal layout retains its wider positioning area.
